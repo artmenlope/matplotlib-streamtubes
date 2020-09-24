@@ -3,14 +3,6 @@
 Created on Fri Aug 21 15:30:44 2020
 
 @author: artmenlope
-
-
-https://plotly.com/chart-studio-help/make-a-streamtube-plot/
-http://web.mit.edu/8.13/matlab/MatlabTraining_IAP_2012/AGV/DemoFiles/ScriptFiles/html/Part8_VectorFields.html
-https://stackoverflow.com/questions/15101103/euler-angles-between-two-3d-vectors
-https://medium.com/plotly/streamtubes-in-plotly-with-python-and-r-a30216ef20a3
-https://plotly.com/r/reference/streamtube/
-https://stackoverflow.com/questions/56864378/how-to-light-and-shade-a-poly3dcollection
 """
 
 import numpy as np
