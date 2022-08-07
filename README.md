@@ -46,7 +46,7 @@ The streamtubes created by the [`streamtubes.py`](streamtubes.py) script are for
 
 ### The `polygonYZ` function
 
-The first step is to build the polygons. Each polygon, centered on a given <img src="https://render.githubusercontent.com/render/math?math=(x%2C%20y%2C%20z)%0A"> point, will consist of a set of points laying on the YZ plane. This arrangement can be seen in **Fig.1**. The blue vector in **Fig.1** corresponds to a unit vector pointing in the x-axis direction and is perpendicular to the surface given by the points.
+The first step is to build the polygons. Each polygon, centered on a given $(x, y, z)$ point, will consist of a set of points laying on the YZ plane. This arrangement can be seen in **Fig.1**. The blue vector in **Fig.1** corresponds to a unit vector pointing in the x-axis direction and is perpendicular to the surface given by the points.
 
 _**Note**: To differentiate the regular polygons given by the points from the polygons of the `Poly3DCollection`, we will call the regular polygons "sections"._
 
@@ -56,7 +56,7 @@ _**Note**: To differentiate the regular polygons given by the points from the po
 <b>Fig.1</b>: Image of the points of the regular polygon (or section) laying on the YZ plane. 
 </p>
 
-In practice, the `polygonYZ` function will take four arguments and one optional argument. The first argument will be the radius of the circle containing the section's points; the other three arguments are the coordinates <img src="https://render.githubusercontent.com/render/math?math=x_0%0A">, <img src="https://render.githubusercontent.com/render/math?math=y_0%0A"> and <img src="https://render.githubusercontent.com/render/math?math=z_0%0A"> of the point where the section is centered. The optional argument is the number of sides of the polygon defining the section and its default value is <img src="https://render.githubusercontent.com/render/math?math=n%3D8%0A">.
+In practice, the `polygonYZ` function will take four arguments and one optional argument. The first argument will be the radius of the circle containing the section's points; the other three arguments are the coordinates $x_0$, $y_0$ and $z_0$ of the point where the section is centered. The optional argument is the number of sides of the polygon defining the section and its default value is $n=8$.
 
 ### The `calc_angles` function
 
@@ -72,11 +72,11 @@ Then, our problem is to find the rotation vector of each section. Therefore, we 
 
 In the case of the first an last sections, instead of taking into account the two adjacent sections as shown in **Fig.2**, their `vecsi` vector will be defined only taking into account the considered section and the adjacent section.
 
-With all this, the rotation vector of the i-th section (`rot_axis_i[i]`) will be result of the cross product of the `xaxis_vec` and `vecs[i]` vectors as seen in **Fig.3** (`rot_axis_i[i]` = `xaxis_vec`<img src="https://render.githubusercontent.com/render/math?math=%5Ctimes%0A">`vecs[i]`). Because the two latter vectors are normalized, the rotation vector will also be normalized. 
+With all this, the rotation vector of the i-th section (`rot_axis_i[i]`) will be result of the cross product of the `xaxis_vec` and `vecs[i]` vectors as seen in **Fig.3** (`rot_axis_i[i]` = `xaxis_vec`$\times$`vecs[i]`). Because the two latter vectors are normalized, the rotation vector will also be normalized. 
 
 The rotation angle, `rot_angle_i[i]`, can be obtained through the dot product of the `xaxis_vec` and `vecs[i]` normalized vectors: 
 
-<img src="https://render.githubusercontent.com/render/math?math=%5Ccos%0A">(`rot_angle_i[i]`) = `xaxis_vec` **·** `vecs[i]` <img src="https://render.githubusercontent.com/render/math?math=%5CLongrightarrow%0A"> `rot_angle_i[i]` = <img src="https://render.githubusercontent.com/render/math?math=%5Carccos%0A">(`xaxis_vec` **·** `vecs[i]`).
+$\cos$(`rot_angle_i[i]`) = `xaxis_vec` **·** `vecs[i]` $\Longrightarrow$ `rot_angle_i[i]` = $\arccos$(`xaxis_vec` **·** `vecs[i]`).
 
 <p align="center">
 <img src="images/calc_angles_rotation.png" width="50%">
@@ -86,11 +86,11 @@ The rotation angle, `rot_angle_i[i]`, can be obtained through the dot product of
 
 Therefore, we can prepare the rotation vectors, `rot_vecs`, for the Scipy's [`scipy.spatial.transform.Rotation.from_rotvec`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.from_rotvec.html) function by multiplying the already obtained rotation vectors with the rotation angles: `rot_vecs[i]` = `rot_angle_i[i]` **·** `rot_axis_i[i]`.
 
-All this is the job done by the `calc_angles` function, which takes as argument only the points where the sections are centered. The `centers` parameter must be an array containing the coordinates, <img src="https://render.githubusercontent.com/render/math?math=(x_0%2C%20y_0%2C%20z_0)%0A">, of said points. Therefore, `centers` must be an array of shape (_N_, 3), where _N_ is the number of sections.
+All this is the job done by the `calc_angles` function, which takes as argument only the points where the sections are centered. The `centers` parameter must be an array containing the coordinates $(x_0, y_0, z_0)$ of said points. Therefore, `centers` must be an array of shape $(N, 3)$, where $N$ is the number of sections.
 
 ### The `make_sections` function
 
-The `make_sections` function is defined requiring five parameters: `x`, `y`, `z`, `r` and `num_sides`. The latter parameter is optional, its default value is `num_sides = 10` and corresponds to the number of sides of the polygons defining the sections. The `x`, `y` and `z` parameters must be 1D arrays containing, respectively, the <img src="https://render.githubusercontent.com/render/math?math=x_0%0A">, <img src="https://render.githubusercontent.com/render/math?math=y_0%0A"> and <img src="https://render.githubusercontent.com/render/math?math=z_0%0A"> coordinates of the centers of the sections. The `r` array would be the value of the plotted function at each center. The value of the function is represented as the radius of the circle containing the points of the correspondent section.
+The `make_sections` function is defined requiring five parameters: `x`, `y`, `z`, `r` and `num_sides`. The latter parameter is optional, its default value is `num_sides = 10` and corresponds to the number of sides of the polygons defining the sections. The `x`, `y` and `z` parameters must be 1D arrays containing, respectively, the $x_0$, $y_0$ and $z_0$ coordinates of the centers of the sections. The `r` array would be the value of the plotted function at each center. The value of the function is represented as the radius of the circle containing the points of the correspondent section.
 
 The `make_sections` function is divided in two parts. In the first part, the function creates the sections from their centers specified in the `centers` argument. An example of the result of the first part of the function can be seen in **Fig.4**.
 
